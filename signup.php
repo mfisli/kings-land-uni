@@ -1,42 +1,54 @@
 	<?php
 	include 'header.php';
-
-	/*
-	Case sensitive
-	Data types:
-	integer, float, string, boolean, array, object 
-	If nothing assigned at decaration then null
-	Constants: define(MY_CONST,"hello i am a const");
-	Cast: (integer) (5 / 2)
-	Reference: $num = 1; $refNum = &num; $refNum++ // 2
-
-
 		date_default_timezone_set('America/Los_Angeles');
-		$conn = mysqli_connect("localhost", "maks", "123123", "bcit") or die(mysqli_connect_error());
+		$conn = mysqli_connect("localhost", "maks", "123123", "kingslanduniversity") or die(mysqli_connect_error());
 
-		$q = "SELECT * FROM users";
+		$q = "CREATE TABLE IF NOT EXISTS major (
+			majorid     VARCHAR(45) PRIMARY KEY NOT NULL,
+		)";
+		mysqli_query($conn, $q) or die(mysqli_error($conn)); // 2d array
+		
+		$q = "INSERT INTO major (majorid) VALUES (
+			'english literature'
+		)";
+		mysqli_query($conn, $q) or die(mysqli_error($conn));
+
+		$q = "INSERT INTO major (majorid) VALUES (
+			'computer science'
+		)";
+		mysqli_query($conn, $q) or die(mysqli_error($conn));
+		
+		$q = "SELECT * FROM major";
 
 		$result = mysqli_query($conn, $q) or die(mysqli_error($conn)); // 2d array
 
 		while($row  = mysqli_fetch_assoc($result)){
-			foreach($row as $key =>$value) {
-				//echo "$key : $value<br>";
+			foreach($row as $key => $value) {
+				echo "$key : $value<br>";
 			}
-			//echo '<br/>';
+			echo '<br/>';
 		}
+		/*
+		$q = "CREATE TABLE IF NOT EXISTS student (
+			studentid  INT         PRIMARY KEY NOT NULL
+			firstname  VARCHAR(45) NOT NULL,
+			lastname   VARCHAR(45) NOT NULL,
+			birthdate  DATE        NOT NULL,
+			major      VARCHAR(45) FOREIGN KEY NOT NULL,
+		)";
+		$result = mysqli_query($conn, $q) or die(mysqli_error($conn)); // 2d array
 
-		$_userName = $_POST['name'];
-		$_userAddress = $_POST['address'];
-		$_userCity = $_POST['city'];
-		$data = array(
-			'Name' => $_userName,
-			'Address' => $_userAddress,
-			'City' => $_userCity
-			);
-		foreach($data as $key => $value){
-			echo "<p> <b>" . $key . ": </b> " . $value . "</p>";
-		} 
-			*/
+		$q = "SELECT * FROM student";
+
+		$result = mysqli_query($conn, $q) or die(mysqli_error($conn)); // 2d array
+
+		while($row  = mysqli_fetch_assoc($result)){
+			foreach($row as $key => $value) {
+				echo "$key : $value<br>";
+			}
+			echo '<br/>';
+		}
+		*/
 	?>
 	<div class='container'>
 	<form action="">

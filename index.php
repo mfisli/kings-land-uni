@@ -1,4 +1,7 @@
-<?php include 'header.php'; ?>
+<?php 
+	include 'header.php'; 
+	include 'databaseinit.php'; 
+?>
 <div class="container">
 	<div class="jumbotron"> 
 		<h1> <span class="glyphicon glyphicon-king"></span> King's Land University </h1> 
