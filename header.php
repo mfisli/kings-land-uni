@@ -14,7 +14,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span> 
       </button>
-      <a class="navbar-brand" href="#"><span class="glyphicon glyphicon-king"></span></a>
+      <a class="navbar-brand" href="./index.php"><span class="glyphicon glyphicon-king"></span></a>
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
@@ -23,8 +23,8 @@
                     <li><a href="./contact.html">Contact Us</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-					<li><a href="signup.php"><span class="glyphicon glyphicon-user"></span> Sign Up </a></li>
 					<li><a href="login.php"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    <li><a href="edit-profile.php"><span class="glyphicon glyphicon-cog"></span> Profile </a></li>
 				</ul>
             </div>
         </div>
