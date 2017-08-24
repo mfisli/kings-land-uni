@@ -7,33 +7,50 @@ function execQuery($conn, $statement){
 	mysqli_query($conn, $statement) or die(mysqli_error($conn));
 }
 
-function selectAll($conn, $table){
-	$q = "SELECT * FROM " . $table;
+function initTableMajor($conn){
+	$q = "CREATE TABLE IF NOT EXISTS major (
+	majorid     VARCHAR(45) PRIMARY KEY NOT NULL
+	)";
+	execQuery($conn, $q);
 
-	$result = mysqli_query($conn, $q) or die(mysqli_error($conn)); // 2d array
+	$q = "INSERT IGNORE INTO major (majorid) VALUES (
+		'english literature'
+	)";
+	execQuery($conn, $q);
 
-	while($row  = mysqli_fetch_assoc($result)){
-		foreach($row as $key => $value) {
-			debug_to_console($key . " : " . $value);
-		}
-		echo '<br/>';
-	}
+	$q = "INSERT IGNORE INTO major (majorid) VALUES (
+		'computer science'
+	)";
+	execQuery($conn, $q);
+
+	selectAllLog($conn, "major");
+}
+function initTableStudent($conn){
+	$q = "CREATE TABLE IF NOT EXISTS student (
+		studentid VARCHAR(45) PRIMARY KEY NOT NULL,
+		firstname VARCHAR(45) NOT NULL,
+		lastname  VARCHAR(45) NOT NULL,
+		birthday  DATE 		  NOT NULL,
+		majorid   VARCHAR(45) NOT NULL,
+		FOREIGN KEY(majorid)  REFERENCES major(majorid)
+	)";
+	execQuery($conn, $q);
+	// sql accepts YYYY-MM-DD format
+	$q = "INSERT IGNORE INTO student (studentid, firstname, lastname, birthday,  majorid) VALUES (
+		'A12345678', 'John', 'Doe', '2000-01-01', 'english literature' 
+	)";
+	execQuery($conn, $q);
+
+	$q = "INSERT IGNORE INTO student (studentid, firstname, lastname, birthday,  majorid) VALUES (
+		'A87654321', 'Sally', 'Smith', '1998-02-03', 'computer science' 
+	)";
+	execQuery($conn, $q);
+
+	selectAllLog($conn, "student");
 }
 // Main 
-$q = "CREATE TABLE IF NOT EXISTS major (
-	majorid     VARCHAR(45) PRIMARY KEY NOT NULL
-)";
-execQuery($conn, $q);
+initTableMajor($conn);
+initTableStudent($conn);
 
-$q = "INSERT IGNORE INTO major (majorid) VALUES (
-	'english literature'
-)";
-execQuery($conn, $q);
 
-$q = "INSERT IGNORE INTO major (majorid) VALUES (
-	'computer science'
-)";
-execQuery($conn, $q);
-
-selectAll($conn, "major");
 
