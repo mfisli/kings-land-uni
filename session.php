@@ -10,7 +10,8 @@ function createSession() {
 }
 
 function checkInactivity() {
-    if(time() - $_SESSION['timestamp'] > 1000) {
+	debug_to_console(time() - $_SESSION['timestamp']);
+    if(time() - $_SESSION['timestamp'] > (20 * 60)) {
         autoLogout();
     } else {
         $_SESSION['timestamp'] = time();
@@ -18,7 +19,6 @@ function checkInactivity() {
 }
 
 function autoLogout() {
-	session_start();
     if (ini_get("session.use_cookies")) {
         $params = session_get_cookie_params();
         setcookie(session_name(), '', time() - 42000,
@@ -27,7 +27,7 @@ function autoLogout() {
         );
     }
     $_SESSION = array();
-    $_SESSION['msg'] = "Good bye";
+    //$_SESSION['msg'] = "Good bye";
     session_destroy();
     debug_to_console("autoLogout()");
     //die();

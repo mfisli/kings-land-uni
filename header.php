@@ -27,8 +27,9 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <?php 
-                    //require_once  'debugtools.php';
+                    require_once  'session.php';
                     @session_start(); 
+                    checkInactivity();
                     if(isset($_SESSION['studentID']) && !empty($_SESSION['studentID'])) {
                         echo "<li><a href='logout.php'><span class='glyphicon glyphicon-log-out'></span> Log Out</a></li>";
                         echo "<li><a href='edit-profile.php'><span class='glyphicon glyphicon-cog'></span> " . $_SESSION['studentID'] ."</a></li>";

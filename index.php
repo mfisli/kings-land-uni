@@ -12,7 +12,6 @@
 </div>
 <div class="container">
 	<?php 	
-	session_start();
 	echo getMsg(); ?>
 	<div class="row">
 		<div class="col-sm-6">
