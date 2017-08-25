@@ -19,7 +19,7 @@ function initTableMajor($conn){
 	)";
 	execQuery($conn, $q);
 
-	selectAllLog($conn, "major");
+	//selectAllLog($conn, "major");
 }
 function initTableStudent($conn){
 	$q = "CREATE TABLE IF NOT EXISTS student (
@@ -42,7 +42,7 @@ function initTableStudent($conn){
 	)";
 	execQuery($conn, $q);
 
-	selectAllLog($conn, "student");
+	//selectAllLog($conn, "student");
 }
 function initAccount($conn){
 	$q = "CREATE TABLE IF NOT EXISTS account (
@@ -62,7 +62,7 @@ function initAccount($conn){
 		'A87654321', '321321' 
 	)";
 	execQuery($conn, $q);
-	selectAllLog($conn, "account");
+	//selectAllLog($conn, "account");
 }
 // Main 
 require_once '../../mysql_conn.php';

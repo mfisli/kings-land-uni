@@ -1,3 +1,5 @@
+<?php ob_start(); 
+?>
 <html>
 <head>
 	<title> King's Land University </title>
@@ -6,6 +8,7 @@
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
+
 	<nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -23,8 +26,16 @@
                     <li><a href="./contact.html">Contact Us</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-					<li><a href="login.php"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-                    <li><a href="edit-profile.php"><span class="glyphicon glyphicon-cog"></span> Profile </a></li>
+                    <?php 
+                    //require_once  'debugtools.php';
+                    @session_start(); 
+                    if(isset($_SESSION['studentID']) && !empty($_SESSION['studentID'])) {
+                        echo "<li><a href='logout.php'><span class='glyphicon glyphicon-log-out'></span> Log Out</a></li>";
+                        echo "<li><a href='edit-profile.php'><span class='glyphicon glyphicon-cog'></span> " . $_SESSION['studentID'] ."</a></li>";
+                    } else {
+                        echo "<li><a href='login.php'><span class='glyphicon glyphicon-log-in'></span> Login</a></li>";
+                    }
+                    ?>
 				</ul>
             </div>
         </div>

@@ -1,6 +1,8 @@
 <?php 
 	include 'header.php'; 
-	include 'databaseinit.php'; 
+	require_once 'databaseinit.php';
+	require_once 'debugtools.php';
+	require_once 'session.php';
 ?>
 <div class="container">
 	<div class="jumbotron"> 
@@ -9,6 +11,9 @@
 	</div>
 </div>
 <div class="container">
+	<?php 	
+	session_start();
+	echo getMsg(); ?>
 	<div class="row">
 		<div class="col-sm-6">
 			<div class="card">
@@ -30,5 +35,4 @@
 		</div>
 	</div>
 </div>
-</body>
-</html>
+<?php include 'footer.php'; ?>

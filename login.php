@@ -1,5 +1,4 @@
 <?php 
-ob_start();
 require_once  'header.php'; 
 require_once  'dbfunctions.php';
 require_once  'debugtools.php'; 
@@ -24,14 +23,16 @@ if(isset($_POST['submit'])) {
 				header("location:index.php");
 			} else {
 				debug_to_console('incorrect password or id');
+				echo "<div class='container'><div class='alert alert-danger'> Incorrect ID or password. </div> </div>";
 				//header("location:login.php");
 			}
 		} else {
-			debug_to_console('error');
+			debug_to_console('login error');
+			echo "<div class='container'><div class='alert alert-danger'> Missing ID or password. </div> </div>";
 		}
 }
-ob_end_flush();
 ?>
+
 <div class="container">
 	<form action="login.php" method="POST">
 		<div class="form-group panel panel-default">
@@ -52,3 +53,4 @@ ob_end_flush();
 		</div>
 	</form>
 </div>
+<?php include 'footer.php'; ?>
