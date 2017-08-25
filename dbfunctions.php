@@ -1,9 +1,7 @@
 <?php
 require_once 'debugtools.php'; 
-$conn = mysqli_connect("localhost", "maks", "123123", "kingslanduniversity") or die(mysqli_connect_error());
-
 function execQuery($conn, $statement){
-	echo "execQuery: " . $statement . "<br/>";
+//	echo "execQuery: " . $statement . "<br/>";
 	return mysqli_query($conn, $statement) or die(mysqli_error($conn));
 }
 //'".$loggin_user."' 

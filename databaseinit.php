@@ -46,7 +46,7 @@ function initTableStudent($conn){
 }
 function initAccount($conn){
 	$q = "CREATE TABLE IF NOT EXISTS account (
-		student_id       VARCHAR(45) PRIMARY KEY NOT NULL,
+		student_id      VARCHAR(45) PRIMARY KEY NOT NULL,
 		password        VARCHAR(45) NOT NULL,
 		last_modified   DATETIME    DEFAULT CURRENT_TIMESTAMP,
 		update_required BOOL        NOT NULL DEFAULT '1',
@@ -65,10 +65,19 @@ function initAccount($conn){
 	selectAllLog($conn, "account");
 }
 // Main 
+require_once '../../mysql_conn.php';
 initTableMajor($conn);
 initTableStudent($conn);
 initAccount($conn);
 
+
+/*object(mysqli_result)#3 (5) { 
+["current_field"]=> int(0) 
+["field_count"]=> int(4) 
+["lengths"]=> NULL 
+["num_rows"]=> int(1) 
+["type"]=> int(0) } 
+*/
 
 
 

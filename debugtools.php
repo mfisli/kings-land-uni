@@ -12,7 +12,7 @@ function selectAllLog($conn, $table){
 	$result = mysqli_query($conn, $q) or die(mysqli_error($conn)); // 2d array
 
 	debug_to_console("Table: " . $table);
-	
+
 	while($row  = mysqli_fetch_assoc($result)){
 		foreach($row as $key => $value) {
 			debug_to_console($key . " : " . $value);

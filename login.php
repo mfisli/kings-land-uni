@@ -3,22 +3,14 @@ ob_start();
 require_once  'header.php'; 
 require_once  'dbfunctions.php';
 require_once  'debugtools.php'; 
-function checkPassword(){
-	debug_to_console("checking pword.");
-	// bad to have connect string in the open
-	$conn = mysqli_connect("localhost", "maks", "123123", "kingslanduniversity") or die(mysqli_connect_error());
+require_once  'session.php';
 
+function checkPassword(){
+	require_once '../../mysql_conn.php';
+	debug_to_console("checking pword.");
 	$id = $_POST['studentid'];
 	$pass = $_POST['password'];
 	return dbCheck($conn, $id, $pass);
-}
-
-function createSession() {
-    // session_start();
-    // $_SESSION['authenticated'] = 1;
-    // $_SESSION['studentID'] = $_POST['studentid'];
-    // $_SESSION['timestamp'] = time();
-    debug_to_console("Session Created");
 }
 
 if(isset($_POST['submit'])) {
@@ -29,8 +21,10 @@ if(isset($_POST['submit'])) {
 			if( checkPassword() ){
 				createSession();
 				debug_to_console("ok - signed in! ");
+				header("location:index.php");
 			} else {
 				debug_to_console('incorrect password or id');
+				//header("location:login.php");
 			}
 		} else {
 			debug_to_console('error');
