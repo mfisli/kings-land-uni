@@ -23,17 +23,20 @@ function initTableMajor($conn){
 }
 function initTableStudent($conn){
 	$q = "CREATE TABLE IF NOT EXISTS student (
-		student_id VARCHAR(45) PRIMARY KEY NOT NULL,
-		first_name VARCHAR(45) NOT NULL,
-		last_name  VARCHAR(45) NOT NULL,
-		birthday  DATE 		  NOT NULL,
-		major_id   VARCHAR(45) NOT NULL,
+		student_id     VARCHAR(45) PRIMARY KEY NOT NULL,
+		first_name     VARCHAR(45) NOT NULL,
+		last_name      VARCHAR(45) NOT NULL,
+		birthday       DATE        NOT NULL,
+		major_id       VARCHAR(45) NOT NULL,
+		street_address VARCHAR(45) NULL,
+		city 		   VARCHAR(45) NULL,
+		postal_code    VARCHAR(45) NULL,
 		FOREIGN KEY(major_id)  REFERENCES major(major_id)
 	)";
 	execQuery($conn, $q);
 	// sql accepts YYYY-MM-DD format
-	$q = "INSERT IGNORE INTO student (student_id, first_name, last_name, birthday,  major_id) VALUES (
-		'A12345678', 'John', 'Doe', '2000-01-01', 'english literature' 
+	$q = "INSERT IGNORE INTO student (student_id, first_name, last_name, birthday,  major_id, street_address, city, postal_code) VALUES (
+		'A12345678', 'John', 'Doe', '2000-01-01', 'english literature', '1478 Walnut Road', 'Anyville', '1i2k5c'
 	)";
 	execQuery($conn, $q);
 
@@ -55,7 +58,7 @@ function initAccount($conn){
 	execQuery($conn, $q);
 	//$bday = 
 	$q = "INSERT IGNORE INTO account (student_id, password) VALUES (
-		'A12345678', '123123' 
+		'A12345678', '123123'
 	)";
 	execQuery($conn, $q);
 	$q = "INSERT IGNORE INTO account (student_id, password) VALUES (
