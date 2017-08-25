@@ -1,11 +1,7 @@
 <?php
-include 'debugtools.php'; 
+require_once  'debugtools.php'; 
+require_once  'dbfunctions.php';
 date_default_timezone_set('America/Los_Angeles');
-$conn = mysqli_connect("localhost", "maks", "123123", "kingslanduniversity") or die(mysqli_connect_error());
-//functions 
-function execQuery($conn, $statement){
-	mysqli_query($conn, $statement) or die(mysqli_error($conn));
-}
 
 function initTableMajor($conn){
 	$q = "CREATE TABLE IF NOT EXISTS major (
@@ -67,7 +63,6 @@ function initAccount($conn){
 	)";
 	execQuery($conn, $q);
 	selectAllLog($conn, "account");
-
 }
 // Main 
 initTableMajor($conn);
