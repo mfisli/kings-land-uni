@@ -9,6 +9,7 @@ if($_SESSION['authenticated'] != 1){
 }
 // echo "<div class='container'><div class='alert alert-danger'> Missing ID or password. </div> </div>";
 $student_id = $_SESSION['studentID'];
+$target_dir = "image_uploads/";
 
 if(isset($_POST['profileSubmit']) && $_SESSION['authenticated'] == 1) {
 	if ( isset($_POST['streetAddress'])  && 
@@ -30,6 +31,14 @@ if(isset($_POST['profileSubmit']) && $_SESSION['authenticated'] == 1) {
 		echo "<div class='container'><div class='alert alert-danger'> Missing address info. </div> </div>";
 	}
 }
+function getThumbnail($file){
+    //debug_to_console( "".$file. " ". file_exists($file));
+    if( file_exists($file.".jpg") ) {
+            return $file;
+    }
+    return "http://www.freeiconspng.com/uploads/user-icon-png-person-user-profile-icon-20.png";
+
+}
 $profileData = getProfileInfo($conn, $student_id);
 
 
@@ -39,7 +48,12 @@ $profileData = getProfileInfo($conn, $student_id);
         <div class="form-group panel panel-default">
             <div class="panel-heading"> Profile Photo </div>
             <div class="panel-body">
-                <img src="http://via.placeholder.com/150x150" alt="Profile Image"> <br />
+                <img
+                    class="img-thumbnail"
+                    alt="Profile Photo"
+                    width="150"
+                    src="<?php echo getThumbnail($target_dir.$student_id)?>"><br/>
+
                 <label for="imageFile"> Upload New Image </label>
                 <input name="imageFile" type="file" required><br/>
                 <button name="imageSubmit" type="submit" class="btn btn-primary"> Update Photo </button>
