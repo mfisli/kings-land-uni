@@ -41,7 +41,7 @@ function getMsg(){
 
 function setMsg($msg, $color){
 	$_SESSION['msg'] =
-		'<div class="alert alert-'.$color .'"> '. $msg . '</div>';
+		'<div class="alert alert-'. $color .'"> '. $msg . '</div>';
 }
 
 function printSessionData(){

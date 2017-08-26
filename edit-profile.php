@@ -34,6 +34,20 @@ $profileData = getProfileInfo($conn, $student_id);
 
 
 ?>
+<div class="container">
+    <form action="edit-profile-photo.php" method="POST" enctype="multipart/form-data">
+        <div class="form-group panel panel-default">
+            <div class="panel-heading"> Profile Photo </div>
+            <div class="panel-body">
+                <img src="http://via.placeholder.com/150x150" alt="Profile Image"> <br />
+                <label for="imageFile"> Upload New Image </label>
+                <input name="imageFile" type="file" required><br/>
+                <button name="imageSubmit" type="submit" class="btn btn-primary"> Update Photo </button>
+<!--                <button name="photoDeleteSubmit" type="submit" class="btn btn-danger"> Delete Photo </button>-->
+            </div>
+        </div>
+    </form>
+</div>
 <div class='container'>
 	<form action="edit-profile" method="POST">
 		<div class="form-group panel panel-default">
@@ -50,7 +64,7 @@ $profileData = getProfileInfo($conn, $student_id);
 				name="city"
 				type="text" 
 				class="form-control"
-				value=<?php echo $profileData['city'] ?> >
+				value= <?php echo $profileData['city'] ?> >
 				<label for="postalCode"> Postal Code </label>
 				<input 
 				name="postalCode"
@@ -67,17 +81,17 @@ $profileData = getProfileInfo($conn, $student_id);
 		<div class="form-group panel panel-default">
 			<div class="panel-heading"> Change Password </div>
 			<div class="panel-body">
-				<label for=""> Current Password</label>
+				<label for="currentPassword"> Current Password</label>
 				<input 
 				name="currentPassword"
 				type="password" 
 				class="form-control">
-				<label for=""> Password</label>
+				<label for="newPassword"> New Password</label>
 				<input 
 				name="newPassword"
 				type="password" 
 				class="form-control">
-				<label for=""> Confirm Password</label>
+				<label for="confirmPassword"> Confirm Password</label>
 				<input 
 				name="confirmPassword"
 				type="password" 
@@ -87,6 +101,7 @@ $profileData = getProfileInfo($conn, $student_id);
 		</div>
 	</form>
 </div>
+<?php include 'footer.php'; ?>
 
 
 
