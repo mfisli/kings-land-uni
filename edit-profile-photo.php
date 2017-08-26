@@ -40,6 +40,13 @@ function imageCreateFromAny($filePath) {
     }
     return $im;
 }
+function renameFile($student_id){
+    debug_to_console("changing " . $student_id);
+
+    $temp = explode(".", $_FILES["imageFile"]["name"]);
+    $newFileName = $student_id . '.' . end($temp);
+    return $newFileName;
+}
 $uploadOk = false;
 if(isset($_POST['imageSubmit'])){
     debug_to_console("I got a file");
@@ -60,8 +67,10 @@ if (!$uploadOk) {
     echo buildMsg("Error uploading image", "danger");
 // if everything is ok, try to upload file
 } else {
-    if (move_uploaded_file($_FILES["imageFile"]["tmp_name"], $target_file)) {
-        echo buildMsg("The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.", "success");
+    $newFileName = renameFile($student_id);
+    debug_to_console("New File Name: " . $target_dir.$newFileName);
+    if (move_uploaded_file($_FILES["imageFile"]["tmp_name"], $target_dir.$newFileName)) {
+        echo buildMsg("The file ". basename( $_FILES["imageFile"]["name"]) . " has been uploaded.", "success");
     } else {
         echo buildMsg("Error saving image", "danger");
     }
@@ -73,9 +82,9 @@ debug_to_console("end edit photo");
 
 <div class="container">
     <div class="panel panel-default">
-        <div class="panel-heading">Profile Photo Edit</div>
-        <div class="panel-body"> <?php echo "Upload ok: " . $uploadOk ?>
-            <img src="<?php echo $target_file ?>" alt="$target_file"></div>
+        <div class="panel-heading">New Profile Photo</div>
+        <div class="panel-body">
+            <img class="img img-thumb" src="<?php echo $target_dir.$newFileName ?>" alt="$target_file"></div>
     </div>
 </div>
 
