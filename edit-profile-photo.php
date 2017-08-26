@@ -49,11 +49,21 @@ if(isset($_POST['imageSubmit'])){
 
     @$check = getimagesize($_FILES["imageFile"]["tmp_name"]);
     if($check !== false) {
-        echo buildMsg("Upload successful", "success");
+        //echo buildMsg("Upload successful", "success");
         $uploadOk = true;
     } else {
         echo buildMsg("Upload is not an image", "danger");
         $uploadOk = false;
+    }
+}
+if (!$uploadOk) {
+    echo buildMsg("Error uploading image", "danger");
+// if everything is ok, try to upload file
+} else {
+    if (move_uploaded_file($_FILES["imageFile"]["tmp_name"], $target_file)) {
+        echo buildMsg("The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.", "success");
+    } else {
+        echo buildMsg("Error saving image", "danger");
     }
 }
 debug_to_console("end edit photo");
@@ -64,7 +74,8 @@ debug_to_console("end edit photo");
 <div class="container">
     <div class="panel panel-default">
         <div class="panel-heading">Profile Photo Edit</div>
-        <div class="panel-body"> <?php echo "Upload ok: " . $uploadOk ?> </div>
+        <div class="panel-body"> <?php echo "Upload ok: " . $uploadOk ?>
+            <img src="<?php echo $target_file ?>" alt="$target_file"></div>
     </div>
 </div>
 
