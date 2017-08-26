@@ -19,7 +19,7 @@
 			  <div class="card-block">
 			    <h3 class="card-title"> Schedule </h3>
 			    <p class="card-text">See today's time table of lectures and labs. This is padding text.</p>
-			    <a href="#" class="btn btn-primary">See Schedule</a>
+			    <a href="schedule.php" class="btn btn-primary">See Schedule</a>
 			  </div>
 			</div>
 			</div>

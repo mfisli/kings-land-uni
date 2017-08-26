@@ -43,6 +43,15 @@ function getProfileInfo($conn, $student_id){
 	}
 	return $data; 
 }
+function getScheduleInfo($conn, $student_id){
+    debug_to_console("Getting Schedule info");
+    $q = "SELECT * FROM lecture WHERE major_id =(SELECT major_id FROM student WHERE student_id=\"$student_id\")";
+    if ($result = mysqli_query($conn, $q) or die(mysqli_error($conn))){
+        $data = $result->fetch_all(MYSQLI_ASSOC);
+
+    }
+    return $data;
+}
 
 
 
