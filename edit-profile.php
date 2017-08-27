@@ -22,7 +22,11 @@ if(isset($_POST['profileSubmit']) && $_SESSION['authenticated'] == 1) {
 		 !empty($_POST['streetAddress']) && 
 		 !empty($_POST['city'])          &&
 		 !empty($_POST['postalCode']) ) {
-		// new data to process
+        debug_to_console("streetAddress: ". $_POST['streetAddress'].
+            " city:" . $_POST['city'] .
+            " postalCode: " . $_POST['postalCode']);
+
+        // new data to process
 		$street = $_POST['streetAddress'];
 		$city = $_POST['city'];
 		$postalCode = $_POST['postalCode'];
@@ -50,7 +54,6 @@ function getThumbnail($file){
 // Modified from: https://davidwalsh.name/create-image-thumbnail-php
 function makeThumb($src, $dest, $desiredWidth) {
     /* read the source image */
-    debug_to_console("src: ". " dest:" . $dest . " width: $desiredWidth");
     $sourceImage = imagecreatefromjpeg($src);
     $width = imagesx($sourceImage);
     $height = imagesy($sourceImage);
@@ -96,18 +99,6 @@ if(isset($_POST['imageSubmit'])){
         $uploadOk = false;
     }
 }
-//
-//if ($uploadOk !== false) {
-//    $newFileName = renameFile($student_id);
-//    debug_to_console("New File Name: " . $target_dir.$newFileName);
-//    if (move_uploaded_file($_FILES["imageFile"]["tmp_name"], $target_dir.$newFileName)) {
-//        setUserMessage("The file ". basename( $_FILES["imageFile"]["name"]) . " has been uploaded.", "success");
-//        //echo buildMsg("The file ". basename( $_FILES["imageFile"]["name"]) . " has been uploaded.", "success");
-//    } else {
-//        setUserMessage("Server error saving image", "danger");
-//        //echo buildMsg("Error saving image", "danger");
-//    }
-//}
 debug_to_console("end edit photo");
 $profileData = getProfileInfo($conn, $student_id);
 
@@ -139,23 +130,23 @@ $profileData = getProfileInfo($conn, $student_id);
 			<div class="panel-heading"> Profile Info </div>
 			<div class="panel-body">
 				<label for="streetAddress"> Street Address </label>
-				<input 
+				<input
 				name="streetAddress"
 				type="text" 
 				class="form-control"
-				value= <?php echo $profileData['street_address'] ?> >
+                placeholder="<?php echo $profileData['street_address'] ?>">
 				<label for="city"> City </label>
 				<input 
 				name="city"
 				type="text" 
 				class="form-control"
-				value= <?php echo $profileData['city'] ?> >
+                placeholder="<?php echo $profileData['city'] ?>">
 				<label for="postalCode"> Postal Code </label>
 				<input 
 				name="postalCode"
 				type="text" 
 				class="form-control"
-				value= <?php echo $profileData['postal_code']  ?> ><br/>
+                placeholder="<?php echo $profileData['postal_code'] ?>"><br/>
 				<button name="profileSubmit" type="submit" class="btn btn-primary"> Update Profile </button>
 			</div>
 		</div>
