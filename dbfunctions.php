@@ -6,6 +6,21 @@ function sanitize($dirty){
     return $clean;
 }
 
+function execQuery($conn, $statement){
+//	echo "execQuery: " . $statement . "<br/>";
+    return mysqli_query($conn, $statement) or die(mysqli_error($conn));
+}
+
+function getResults($queryResult, $output){
+    while ($row = mysqli_fetch_assoc($queryResult)) {
+        foreach ($row as $key => $value) {
+            //debug_to_console("Key : " . $key . " | Value: " . $value);
+            $output += array($key => $value);
+        }
+    }
+    return $output;
+}
+
 function dbCheck($conn, $student_id, $password){
 	debug_to_console("processing pw check in db.");
     if ($stmt = mysqli_prepare($conn, "SELECT * FROM account WHERE student_id=? AND password=?")
@@ -44,25 +59,24 @@ function getProfileInfo($conn, $student_id){
         mysqli_stmt_bind_param($stmt, "s", $student_id);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
-
-        while ($row = mysqli_fetch_assoc($result)) {
-            foreach ($row as $key => $value) {
-                //debug_to_console("Key : " . $key . " | Value: " . $value);
-                $data += array($key => $value);
-            }
-        }
+        $data = getResults($result, $data);
     }
     return $data;
 }
 function getScheduleInfo($conn, $student_id){
     debug_to_console("Getting Schedule info");
-    $q = "SELECT * FROM lecture WHERE major_id =(SELECT major_id FROM student WHERE student_id=\"$student_id\")";
-    if ($result = mysqli_query($conn, $q) or die(mysqli_error($conn))){
-        $data = $result->fetch_all(MYSQLI_ASSOC);
-
+    $data = array();
+    if($stmt = mysqli_prepare($conn, "SELECT * FROM lecture WHERE major_id =(SELECT major_id FROM student WHERE student_id=?)")
+    or die(mysqli_error($conn))) {
+        mysqli_stmt_bind_param($stmt, "s", $student_id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        $data = getResults($result, $data);
     }
     return $data;
 }
+
+
 
 
 
