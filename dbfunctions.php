@@ -34,22 +34,25 @@ function updateProfile($conn, $student_id, $street, $city, $postalCode){
         return true;
     }
     debug_to_console("updateProfile error");
-
     return false;
 }
 function getProfileInfo($conn, $student_id){
-	debug_to_console("Getting profile info");
-	$q = "SELECT * FROM student WHERE student_id='".$student_id."';";
-	if ($result = mysqli_query($conn, $q) or die(mysqli_error($conn))){
-		$data = array();
-		while($row  = mysqli_fetch_assoc($result)){
-			foreach($row as $key => $value) {
-//                debug_to_console("Key : " . $key . " | Value: " . $value);
-				$data += array($key => $value);
-			}
-		}
-	}
-	return $data; 
+    debug_to_console("Getting profile info");
+    $data = array();
+    if ($stmt = mysqli_prepare($conn, "SELECT * FROM student WHERE student_id=?")
+        or die(mysqli_error($conn))) {
+        mysqli_stmt_bind_param($stmt, "s", $student_id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            foreach ($row as $key => $value) {
+                //debug_to_console("Key : " . $key . " | Value: " . $value);
+                $data += array($key => $value);
+            }
+        }
+    }
+    return $data;
 }
 function getScheduleInfo($conn, $student_id){
     debug_to_console("Getting Schedule info");
