@@ -13,6 +13,11 @@ $target_dir = "image_uploads/";
 define("IMAGES_DIR", "image_uploads".DIRECTORY_SEPARATOR);
 define("IMAGE_WIDTH", 150);
 define("IMAGE_TYPE",".jpg");
+
+function sanitizeFormInput($data) {
+    $clear = trim(preg_replace('/ +/', ' ', preg_replace('/[^A-Za-z0-9 ]/', ' ', urldecode(html_entity_decode(strip_tags($data))))));
+    return $clear;
+}
 //.............................................................................
 // Profile Address
 if(isset($_POST['profileSubmit']) && $_SESSION['authenticated'] == 1) {
@@ -27,9 +32,9 @@ if(isset($_POST['profileSubmit']) && $_SESSION['authenticated'] == 1) {
             " postalCode: " . $_POST['postalCode']);
 
         // new data to process
-		$street = $_POST['streetAddress'];
-		$city = $_POST['city'];
-		$postalCode = $_POST['postalCode'];
+		$street = sanitizeFormInput($_POST['streetAddress']);
+		$city = sanitizeFormInput($_POST['city']);
+		$postalCode = sanitizeFormInput($_POST['postalCode']);
 		if(updateProfile($conn, $student_id, $street, $city, $postalCode)) {
             setUserMessage("Update Successful.","success");
 		} else {
@@ -106,7 +111,7 @@ $profileData = getProfileInfo($conn, $student_id);
 ?>
 <?php echo getUserMessage(); ?>
 <div class="container">
-    <form action="edit-profile.php" method="POST" enctype="multipart/form-data">
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" enctype="multipart/form-data">
         <div class="form-group panel panel-default">
             <div class="panel-heading"> Profile Photo </div>
             <div class="panel-body">
@@ -125,7 +130,7 @@ $profileData = getProfileInfo($conn, $student_id);
     </form>
 </div>
 <div class='container'>
-	<form action="edit-profile" method="POST">
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" >
 		<div class="form-group panel panel-default">
 			<div class="panel-heading"> Profile Info </div>
 			<div class="panel-body">

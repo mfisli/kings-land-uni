@@ -6,42 +6,36 @@ function sanitize($dirty){
     return $clean;
 }
 
-function execQuery($conn, $statement){
-//	echo "execQuery: " . $statement . "<br/>";
-	return mysqli_query($conn, $statement) or die(mysqli_error($conn));
-}
-//'".$loggin_user."' 
 function dbCheck($conn, $student_id, $password){
 	debug_to_console("processing pw check in db.");
-	$q = "SELECT * FROM account
-		WHERE student_id='".$student_id."' AND password='".$password ."';";
-	if ($result = mysqli_query($conn, $q) or die(mysqli_error($conn))){
-		/* determine number of rows result set */
-	    $row_cnt = mysqli_num_rows($result);
-
-	    debug_to_console("Pw check rows: " . $row_cnt);
-
-	    /* close result set */
-	    mysqli_free_result($result);
-		return $row_cnt > 0; 
-	} 
-	return false; 
+    if ($stmt = mysqli_prepare($conn, "SELECT * FROM account WHERE student_id=? AND password=?")
+        or die(mysqli_error($conn))) {
+        mysqli_stmt_bind_param($stmt, "ss", $student_id, $password);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_store_result($stmt);
+        $rows = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        return $rows > 0;
+    }
+    debug_to_console("false");
+    return false;
 }
+
 function updateProfile($conn, $student_id, $street, $city, $postalCode){
-//	debug_to_console("Updating profile with: "
-//        . $student_id . " | "
-//        . $street . " | "
-//        . $city . " | "
-//        . $postalCode);
     $street = sanitize($street);
     $city = sanitize($city);
     $postalCode = sanitize($postalCode);
 
-    $q = "UPDATE student SET street_address='". $street ."', city='". $city . "', postal_code='" . $postalCode . "'WHERE student_id ='". $student_id. "';";
-	if ($result = mysqli_query($conn, $q) or die(mysqli_error($conn))){
-		return true;
-	}
-	return false;
+    if ($stmt = mysqli_prepare($conn, "UPDATE student SET street_address=?, city=?, postal_code=? WHERE student_id=?")
+        or die(mysqli_error($conn))) {
+        mysqli_stmt_bind_param($stmt, "ssss", $street, $city, $postalCode, $student_id);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+        return true;
+    }
+    debug_to_console("updateProfile error");
+
+    return false;
 }
 function getProfileInfo($conn, $student_id){
 	debug_to_console("Getting profile info");
@@ -50,7 +44,7 @@ function getProfileInfo($conn, $student_id){
 		$data = array();
 		while($row  = mysqli_fetch_assoc($result)){
 			foreach($row as $key => $value) {
-                debug_to_console("Key : " . $key . " | Value: " . $value);
+//                debug_to_console("Key : " . $key . " | Value: " . $value);
 				$data += array($key => $value);
 			}
 		}
