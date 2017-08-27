@@ -21,6 +21,7 @@ function getResults($queryResult, $output){
     return $output;
 }
 
+
 function dbCheck($conn, $student_id, $password){
 	debug_to_console("processing pw check in db.");
     if ($stmt = mysqli_prepare($conn, "SELECT * FROM account WHERE student_id=? AND password=?")
@@ -71,7 +72,8 @@ function getScheduleInfo($conn, $student_id){
         mysqli_stmt_bind_param($stmt, "s", $student_id);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
-        $data = getResults($result, $data);
+        //var_dump($result);
+        $data = $result->fetch_all(MYSQLI_ASSOC);
     }
     return $data;
 }
