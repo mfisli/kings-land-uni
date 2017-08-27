@@ -12,7 +12,7 @@
 </div>
 <div class="container">
 	<?php 	
-	echo getMsg(); ?>
+	echo getSessionMessage(); ?>
 	<div class="row">
 		<div class="col-sm-6">
 			<div class="card">

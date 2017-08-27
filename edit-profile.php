@@ -2,15 +2,17 @@
 include 'header.php';
 require_once '../../mysql_conn.php';
 require_once 'dbfunctions.php';
+require_once 'messageUiBuilder.php';
 
 if($_SESSION['authenticated'] != 1){
 	header("location:login.php");
 	die();
 }
-// echo "<div class='container'><div class='alert alert-danger'> Missing ID or password. </div> </div>";
 $student_id = $_SESSION['studentID'];
 $target_dir = "image_uploads/";
-
+define("IMAGES_DIR",     "image_uploads".DIRECTORY_SEPARATOR);
+//.............................................................................
+// Profile Address
 if(isset($_POST['profileSubmit']) && $_SESSION['authenticated'] == 1) {
 	if ( isset($_POST['streetAddress'])  && 
 		 isset($_POST['city'])           && 
@@ -23,12 +25,14 @@ if(isset($_POST['profileSubmit']) && $_SESSION['authenticated'] == 1) {
 		$city = $_POST['city'];
 		$postalCode = $_POST['postalCode'];
 		if(updateProfile($conn, $student_id, $street, $city, $postalCode)) {
-			echo "<div class='container'><div class='alert alert-success'> Update Successful. </div> </div>";
+            setUserMessage("Update Successful.","success");
 		} else {
-			echo "<div class='container'><div class='alert alert-dange'> Cannot update database. </div> </div>";
+            setUserMessage("Cannot update database.", "danger");
+			//echo "<div class='container'><div class='alert alert-dange'> Cannot update database. </div> </div>";
 		}
 	} else {
-		echo "<div class='container'><div class='alert alert-danger'> Missing address info. </div> </div>";
+        setUserMessage("Missing address info.", "danger");
+		//echo "<div class='container'><div class='alert alert-danger'> Missing address info. </div> </div>";
 	}
 }
 function getThumbnail($file){
@@ -36,15 +40,82 @@ function getThumbnail($file){
     if( file_exists($file.".jpg") ) {
             return $file;
     }
-    return "http://www.freeiconspng.com/uploads/user-icon-png-person-user-profile-icon-20.png";
+    return IMAGES_DIR."noProfilePhoto.png";
 
 }
+//.............................................................................
+// Profile Image
+// Source: http://php.net/manual/en/function.imagecreatefromjpeg.php
+function imageCreateFromAny($filePath) {
+    $type = exif_imagetype($filePath); // [] if you don't have exif you could use getImageSize()
+    $allowedTypes = array(
+        1,  // [] gif
+        2,  // [] jpg
+        3,  // [] png
+        6   // [] bmp
+    );
+    if (!in_array($type, $allowedTypes)) {
+        return false;
+    }
+    switch ($type) {
+        case 1 :
+            $im = imageCreateFromGif($filePath);
+            break;
+        case 2 :
+            $im = imageCreateFromJpeg($filePath);
+            break;
+        case 3 :
+            $im = imageCreateFromPng($filePath);
+            break;
+        case 6 :
+            $im = imageCreateFromBmp($filePath);
+            break;
+    }
+    return $im;
+}
+function renameFile($student_id){
+    debug_to_console("changing " . $student_id);
+
+    $temp = explode(".", $_FILES["imageFile"]["name"]);
+    $newFileName = $student_id . '.' . end($temp);
+    return $newFileName;
+}
+$uploadOk = false;
+if(isset($_POST['imageSubmit'])){
+    debug_to_console("I got a file");
+    $target_dir = "image_uploads/";
+    $target_file = $target_dir . basename($_FILES["imageFile"]["name"]);
+    $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+
+    @$check = getimagesize($_FILES["imageFile"]["tmp_name"]);
+    if($check !== false) {
+        debug_to_console("Upload file is an image");
+        $uploadOk = true;
+    } else {
+        setUserMessage("Uploaded file is not an image.", "danger");
+        //echo buildMsg("Upload is not an image", "danger");
+        $uploadOk = false;
+    }
+}
+if ($uploadOk !== false) {
+    $newFileName = renameFile($student_id);
+    debug_to_console("New File Name: " . $target_dir.$newFileName);
+    if (move_uploaded_file($_FILES["imageFile"]["tmp_name"], $target_dir.$newFileName)) {
+        setUserMessage("The file ". basename( $_FILES["imageFile"]["name"]) . " has been uploaded.", "success");
+        //echo buildMsg("The file ". basename( $_FILES["imageFile"]["name"]) . " has been uploaded.", "success");
+    } else {
+        setUserMessage("Server error saving image", "danger");
+        //echo buildMsg("Error saving image", "danger");
+    }
+}
+debug_to_console("end edit photo");
 $profileData = getProfileInfo($conn, $student_id);
 
 
 ?>
+<?php echo getUserMessage(); ?>
 <div class="container">
-    <form action="edit-profile-photo.php" method="POST" enctype="multipart/form-data">
+    <form action="edit-profile.php" method="POST" enctype="multipart/form-data">
         <div class="form-group panel panel-default">
             <div class="panel-heading"> Profile Photo </div>
             <div class="panel-body">

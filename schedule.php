@@ -21,8 +21,6 @@ $data =  getScheduleInfo($conn, $student_id);
             }
             echo "<hr />";
         }
-
-
         ?>
         </div>
     </div>

@@ -5,7 +5,7 @@ function createSession() {
     $_SESSION['authenticated'] = 1;
     $_SESSION['studentID'] = $_POST['studentid'];
     $_SESSION['timestamp'] = time();
-    setMsg("Logged in as: " . $_SESSION['studentID'], "info");
+    setSessionMessage("Logged in as: " . $_SESSION['studentID'], "info");
     debug_to_console("Session Created");
 }
 
@@ -32,14 +32,14 @@ function autoLogout() {
     debug_to_console("autoLogout()");
     //die();
 }
-function getMsg(){
+function getSessionMessage(){
 	$result = (string)$_SESSION['msg'];
 	//$_SESSION['msg'] = null;
 	debug_to_console("Session msg: " . $result);
-	return $result; 
+	return $result;
 }
 
-function setMsg($msg, $color){
+function setSessionMessage($msg, $color){
 	$_SESSION['msg'] =
 		'<div class="alert alert-'. $color .'"> '. $msg . '</div>';
 }
