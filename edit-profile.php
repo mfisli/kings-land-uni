@@ -10,7 +10,9 @@ if($_SESSION['authenticated'] != 1){
 }
 $student_id = $_SESSION['studentID'];
 $target_dir = "image_uploads/";
-define("IMAGES_DIR",     "image_uploads".DIRECTORY_SEPARATOR);
+define("IMAGES_DIR", "image_uploads".DIRECTORY_SEPARATOR);
+define("IMAGE_WIDTH", 150);
+define("IMAGE_TYPE",".jpg");
 //.............................................................................
 // Profile Address
 if(isset($_POST['profileSubmit']) && $_SESSION['authenticated'] == 1) {
@@ -45,41 +47,36 @@ function getThumbnail($file){
 }
 //.............................................................................
 // Profile Image
-// Source: http://php.net/manual/en/function.imagecreatefromjpeg.php
-function imageCreateFromAny($filePath) {
-    $type = exif_imagetype($filePath); // [] if you don't have exif you could use getImageSize()
-    $allowedTypes = array(
-        1,  // [] gif
-        2,  // [] jpg
-        3,  // [] png
-        6   // [] bmp
-    );
-    if (!in_array($type, $allowedTypes)) {
-        return false;
-    }
-    switch ($type) {
-        case 1 :
-            $im = imageCreateFromGif($filePath);
-            break;
-        case 2 :
-            $im = imageCreateFromJpeg($filePath);
-            break;
-        case 3 :
-            $im = imageCreateFromPng($filePath);
-            break;
-        case 6 :
-            $im = imageCreateFromBmp($filePath);
-            break;
-    }
-    return $im;
-}
-function renameFile($student_id){
-    debug_to_console("changing " . $student_id);
+// Modified from: https://davidwalsh.name/create-image-thumbnail-php
+function makeThumb($src, $dest, $desiredWidth) {
+    /* read the source image */
+    debug_to_console("src: ". " dest:" . $dest . " width: $desiredWidth");
+    $sourceImage = imagecreatefromjpeg($src);
+    $width = imagesx($sourceImage);
+    $height = imagesy($sourceImage);
 
-    $temp = explode(".", $_FILES["imageFile"]["name"]);
-    $newFileName = $student_id . '.' . end($temp);
+    /* find the "desired height" of this thumbnail, relative to the desired width  */
+    $desiredHeight = floor($height * ($desiredWidth / $width));
+
+    /* create a new, "virtual" image */
+    $virtualImage = imagecreatetruecolor($desiredWidth, $desiredHeight);
+
+    /* copy source image at a resized size */
+    if(imagecopyresampled($virtualImage, $sourceImage, 0, 0, 0, 0, $desiredWidth, $desiredHeight, $width, $height)){
+        /* create the physical thumbnail image to its destination */
+        imagejpeg($virtualImage, $dest);
+        return true;
+    }
+    return false;
+
+}
+
+function setFileName($student_id){
+    debug_to_console("Setting file name with id: " . $student_id);
+    $newFileName = IMAGES_DIR.$student_id.IMAGE_TYPE;
     return $newFileName;
 }
+
 $uploadOk = false;
 if(isset($_POST['imageSubmit'])){
     debug_to_console("I got a file");
@@ -90,24 +87,27 @@ if(isset($_POST['imageSubmit'])){
     @$check = getimagesize($_FILES["imageFile"]["tmp_name"]);
     if($check !== false) {
         debug_to_console("Upload file is an image");
-        $uploadOk = true;
+        if(makeThumb($_FILES["imageFile"]["tmp_name"], setFileName($student_id), IMAGE_WIDTH)){
+            $uploadOk = true;
+        }
     } else {
-        setUserMessage("Uploaded file is not an image.", "danger");
+        setUserMessage("Uploaded file is not an image or is too large.", "danger");
         //echo buildMsg("Upload is not an image", "danger");
         $uploadOk = false;
     }
 }
-if ($uploadOk !== false) {
-    $newFileName = renameFile($student_id);
-    debug_to_console("New File Name: " . $target_dir.$newFileName);
-    if (move_uploaded_file($_FILES["imageFile"]["tmp_name"], $target_dir.$newFileName)) {
-        setUserMessage("The file ". basename( $_FILES["imageFile"]["name"]) . " has been uploaded.", "success");
-        //echo buildMsg("The file ". basename( $_FILES["imageFile"]["name"]) . " has been uploaded.", "success");
-    } else {
-        setUserMessage("Server error saving image", "danger");
-        //echo buildMsg("Error saving image", "danger");
-    }
-}
+//
+//if ($uploadOk !== false) {
+//    $newFileName = renameFile($student_id);
+//    debug_to_console("New File Name: " . $target_dir.$newFileName);
+//    if (move_uploaded_file($_FILES["imageFile"]["tmp_name"], $target_dir.$newFileName)) {
+//        setUserMessage("The file ". basename( $_FILES["imageFile"]["name"]) . " has been uploaded.", "success");
+//        //echo buildMsg("The file ". basename( $_FILES["imageFile"]["name"]) . " has been uploaded.", "success");
+//    } else {
+//        setUserMessage("Server error saving image", "danger");
+//        //echo buildMsg("Error saving image", "danger");
+//    }
+//}
 debug_to_console("end edit photo");
 $profileData = getProfileInfo($conn, $student_id);
 
